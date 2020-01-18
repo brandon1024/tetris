@@ -1,4 +1,5 @@
 # Tetris
+<img src="tetris-screenshot.png" align="left"/>
 Yet another Tetris implementation, written in C with a Curses frontend.
 
 ## Building and Installing
