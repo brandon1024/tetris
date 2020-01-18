@@ -4,6 +4,7 @@
 
 #include "tetris-well.h"
 
+static int drop = 0;
 static int game_running = 1;
 static struct tetris_well well;
 
@@ -36,26 +37,43 @@ int main(void)
 	signal(SIGALRM, alarm_sig_handler);
 	alarm(1);
 
-	while(game_running) {
+	while (game_running) {
+		if (drop) {
+			if (tetrimino_shift(&well, SHIFT_DOWN) < 0) {
+				tetris_well_commit_tetrimino(&well);
+
+				if (tetrinimo_new(&well))
+					game_running = 0;
+			}
+
+			draw_board();
+			drop = 0;
+		}
+
 		switch (getch()) {
 			case 'a':
 			case 'A':
+			case KEY_LEFT:
 				tetrimino_shift(&well, SHIFT_LEFT);
+				draw_board();
 				break;
 			case 's':
 			case 'S':
+			case KEY_DOWN:
 				tetrimino_shift(&well, SHIFT_DOWN);
+				draw_board();
 				break;
 			case 'd':
 			case 'D':
+			case KEY_RIGHT:
 				tetrimino_shift(&well, SHIFT_RIGHT);
+				draw_board();
 				break;
 			case ' ':
 				tetrimino_rotate(&well);
+				draw_board();
 				break;
 		}
-
-		draw_board();
 	}
 
 	wclear(stdscr);
@@ -68,16 +86,7 @@ static void alarm_sig_handler(int sig)
 {
 	(void)sig;
 
-	if (tetrimino_shift(&well, SHIFT_DOWN) < 0) {
-		tetris_well_commit_tetrimino(&well);
-
-		if (tetrinimo_new(&well)) {
-			game_running = 0;
-			draw_board();
-
-			return;
-		}
-	}
+	drop = 1;
 
 	alarm(1);
 	draw_board();
