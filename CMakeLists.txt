@@ -19,7 +19,7 @@ FILE(GLOB_RECURSE SRC_LIST FOLLOW_SYMLINKS ${PROJECT_SOURCE_DIR}/src/*.c)
 FILE(GLOB_RECURSE HEAD_FILES FOLLOW_SYMLINKS ${PROJECT_SOURCE_DIR}/include/*.h ${PROJECT_BINARY_DIR}/include/*.h)
 
 #
-# Configure git-chat Executable and Installation
+# Configure Executable and Installation
 #
 FIND_PACKAGE(Curses REQUIRED)
 

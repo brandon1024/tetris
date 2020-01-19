@@ -7,6 +7,9 @@
 
 #include "tetris-well.h"
 
+#include <stdio.h>
+#include "display-engine.h"
+
 static size_t cell_init_coords[7][4][2] = {
 		{{4, 0}, /* pivot */ {4, 1}, {4, 2}, {4, 3}}, // type I
 		{{4, 0}, {5, 0}, {4, 1}, {5, 1}}, // type O
@@ -102,8 +105,8 @@ int tetrimino_rotate(struct tetris_well *well)
 
 	/* all rotate about tetrimino_coords[1] */
 	while (i < 4) {
-		ssize_t x = - (well->tetrimino_coords[i][1] - well->tetrimino_coords[1][1]) + well->tetrimino_coords[1][0] + off_x;
-		ssize_t y = (well->tetrimino_coords[i][0] - well->tetrimino_coords[1][0]) + well->tetrimino_coords[1][1] + off_y;
+		ssize_t x = - ((ssize_t)well->tetrimino_coords[i][1] - (ssize_t)well->tetrimino_coords[1][1]) + well->tetrimino_coords[1][0] + off_x;
+		ssize_t y = ((ssize_t)well->tetrimino_coords[i][0] - (ssize_t)well->tetrimino_coords[1][0]) + well->tetrimino_coords[1][1] + off_y;
 
 		/*
 		 * Check if the cell is off the game board; we need to shift all
@@ -120,7 +123,7 @@ int tetrimino_rotate(struct tetris_well *well)
 		}
 
 		if (y < 0) {
-			off_y = -(y);
+			off_y = -y;
 			i = 0;
 			continue;
 		} else if (y >= BOARD_HEIGHT) {

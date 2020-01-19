@@ -28,3 +28,9 @@ Want to play?
 ```
 $ tetris
 ```
+
+# Controls
+- Move tetriminos using the ASD or arrow keys: <kbd>→</kbd><kbd>↓</kbd><kbd>←</kbd> or <kbd>d</kbd><kbd>s</kbd><kbd>a</kbd>
+- Rotate tetriminos with the spacebar: <kbd>⎵</kbd>
+- Pause the game by pressing 'p' key: <kbd>p</kbd>
+- Quit the game by pressing the 'q' key: <kbd>q</kbd>

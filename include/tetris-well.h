@@ -2,6 +2,7 @@
 #define TETRIS_TETRIS_WELL_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 /**
  * tetris-well:
