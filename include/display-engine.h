@@ -14,7 +14,7 @@ void initialize_display_engine(void);
 
 int user_input(void);
 
-void draw_board(struct tetris_well *well, int level, int score);
+void draw_board(struct tetris_well *well, int level, int score, int lines);
 
 void stop_display_engine(void);
 

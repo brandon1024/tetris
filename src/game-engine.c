@@ -11,19 +11,26 @@ static const int level_gravity_speeds[] = {
 };
 
 #define update_score(score, level, lines_cleared) (score_chart[lines_cleared] * (level + 1) + score)
-#define update_level(level, lines_cleared) (level + ((lines += lines_cleared) > ((level + 1) * 10) ? 1 : 0))
+#define update_level(level, lines_cleared, total_lines_cleared) (level + ((total_lines_cleared) > ((level + 1) * 10) ? 1 : 0))
 
 static struct tetris_well well;
 static int game_running = 1, paused = 0;
 static int drop = 0;
-static int level = 0, score = 0, lines = 0, frames = 0;
+static int frames = 0;
+static int *level_ptr = NULL;
 
 struct itimerval timer;
 
 static void alarm_sig_handler(int sig);
 
-void start_game(void)
+int start_game(int *level, int *lines_cleared)
 {
+	int score = 0;
+
+	level_ptr = level;
+	*level = 0;
+	*lines_cleared = 0;
+
 	tetris_well_init(&well);
 	tetrinimo_new(&well);
 
@@ -37,9 +44,10 @@ void start_game(void)
 	while (game_running) {
 		if (drop && !paused) {
 			if (tetrimino_shift(&well, SHIFT_DOWN) < 0) {
-				int lines_cleared = tetris_well_commit_tetrimino(&well);
-				score = update_score(score, level, lines_cleared);
-				level = update_level(level, lines_cleared);
+				int lines = tetris_well_commit_tetrimino(&well);
+				*lines_cleared = *lines_cleared + lines;
+				score = update_score(score, *level, *lines_cleared);
+				*level = update_level(*level, lines, *lines_cleared);
 
 				if (tetrinimo_new(&well))
 					game_running = 0;
@@ -50,26 +58,31 @@ void start_game(void)
 
 		switch (user_input()) {
 			case INPUT_RIGHT:
-				tetrimino_shift(&well, SHIFT_RIGHT);
+				!paused && tetrimino_shift(&well, SHIFT_RIGHT);
 				break;
 			case INPUT_LEFT:
-				tetrimino_shift(&well, SHIFT_LEFT);
+				!paused && tetrimino_shift(&well, SHIFT_LEFT);
 				break;
 			case INPUT_DOWN:
-				tetrimino_shift(&well, SHIFT_DOWN);
+				!paused && tetrimino_shift(&well, SHIFT_DOWN);
 				break;
 			case INPUT_ROTATE:
-				tetrimino_rotate(&well);
+				!paused && tetrimino_rotate(&well);
 				break;
 			case INPUT_PAUSE:
 				paused = !paused;
 				break;
 			case INPUT_STOP:
-				return;
+				game_running = 0;
 		}
 
-		draw_board(&well, level, score);
+		draw_board(&well, *level, score, *lines_cleared);
 	}
+
+	timer.it_interval.tv_sec = 0;
+	timer.it_interval.tv_usec = 0;
+
+	return score;
 }
 
 
@@ -77,7 +90,7 @@ static void alarm_sig_handler(int sig)
 {
 	(void)sig;
 
-	int apparent_level = level > 29 ? 29 : level;
+	int apparent_level = *level_ptr > 29 ? 29 : *level_ptr;
 	int gravity = level_gravity_speeds[apparent_level];
 	if (!paused)
 		frames++;

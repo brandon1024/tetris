@@ -81,10 +81,13 @@
 #define CELL_TYPE_J ((unsigned)1 << (unsigned)5)
 #define CELL_TYPE_L ((unsigned)1 << (unsigned)6)
 
+extern const size_t cell_init_coords[7][4][2];
+
 struct tetris_well {
 	uint8_t matrix[BOARD_HEIGHT][BOARD_WIDTH];
 	size_t tetrimino_coords[4][2];
 	uint8_t tetrimino_type;
+	size_t next_tetrimino_type_index;
 };
 
 /**

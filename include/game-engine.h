@@ -1,6 +1,6 @@
 #ifndef TETRIS_GAME_ENGINE_H
 #define TETRIS_GAME_ENGINE_H
 
-void start_game(void);
+int start_game(int *level, int *lines_cleared);
 
 #endif //TETRIS_GAME_ENGINE_H

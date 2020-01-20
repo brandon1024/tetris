@@ -38,7 +38,7 @@ void initialize_display_engine(void)
 
 	well_window = newwin(BOARD_HEIGHT + 2, BOARD_WIDTH * 2 + 2, 1, 1);
 	box(well_window, 0 , 0);
-	score_window = newwin(4, BOARD_WIDTH * 2 + 2, BOARD_HEIGHT + 3, 1);
+	score_window = newwin(5, BOARD_WIDTH * 2 + 2, BOARD_HEIGHT + 3, 1);
 	box(score_window, 0 , 0);
 
 	wrefresh(well_window);
@@ -81,7 +81,7 @@ void stop_display_engine(void)
 	endwin();
 }
 
-void draw_board(struct tetris_well *well, int level, int score)
+void draw_board(struct tetris_well *well, int level, int score, int lines)
 {
 	for (size_t i = 0; i < BOARD_HEIGHT; i++) {
 		wmove(well_window, i + 1, 1);
@@ -114,6 +114,7 @@ void draw_board(struct tetris_well *well, int level, int score)
 
 	mvwprintw(score_window, 1, 1, "Level: %d", level);
 	mvwprintw(score_window, 2, 1, "Score: %d", score);
+	mvwprintw(score_window, 3, 1, "Lines: %d", lines);
 
 	box(score_window, 0 , 0);
 	wrefresh(score_window);

@@ -7,10 +7,7 @@
 
 #include "tetris-well.h"
 
-#include <stdio.h>
-#include "display-engine.h"
-
-static size_t cell_init_coords[7][4][2] = {
+const size_t cell_init_coords[7][4][2] = {
 		{{4, 0}, /* pivot */ {4, 1}, {4, 2}, {4, 3}}, // type I
 		{{4, 0}, {5, 0}, {4, 1}, {5, 1}}, // type O
 		{{4, 0}, /* pivot */ {5, 0}, {6, 0}, {5, 1}}, // type T
@@ -33,13 +30,15 @@ void tetris_well_init(struct tetris_well *well)
 	memset(well->matrix, 0, sizeof(uint8_t) * BOARD_HEIGHT * BOARD_WIDTH);
 	memset(well->tetrimino_coords, 0, sizeof(size_t) * 4 * 2);
 	well->tetrimino_type = CELL_TYPE_NONE;
+	well->next_tetrimino_type_index = random() % 7;
 }
 
 int tetrinimo_new(struct tetris_well *well)
 {
-	size_t index = random() % 7;
-	well->tetrimino_type = (uint8_t)((unsigned)1 << index);
-	memcpy(well->tetrimino_coords, cell_init_coords[index], sizeof(size_t) * 4 * 2);
+	well->tetrimino_type = (uint8_t)((unsigned)1 << well->next_tetrimino_type_index);
+	memcpy(well->tetrimino_coords, cell_init_coords[well->next_tetrimino_type_index], sizeof(size_t) * 4 * 2);
+
+	well->next_tetrimino_type_index = random() % 7;
 
 	return tetrimino_overlapping_on_board(well, well->tetrimino_coords);
 }
@@ -113,21 +112,21 @@ int tetrimino_rotate(struct tetris_well *well)
 		 * coordinates by some offset.
 		 * */
 		if (x < 0) {
-			off_x = -x;
+			off_x += -x;
 			i = 0;
 			continue;
 		} else if (x >= BOARD_WIDTH) {
-			off_x = -(x - BOARD_WIDTH + 1);
+			off_x += -(x - BOARD_WIDTH + 1);
 			i = 0;
 			continue;
 		}
 
 		if (y < 0) {
-			off_y = -y;
+			off_y += -y;
 			i = 0;
 			continue;
 		} else if (y >= BOARD_HEIGHT) {
-			off_y = -(y - BOARD_HEIGHT + 1);
+			off_y += -(y - BOARD_HEIGHT + 1);
 			i = 0;
 			continue;
 		}
