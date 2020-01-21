@@ -42,6 +42,30 @@ int start_game(int *level, int *lines_cleared)
 	setitimer(ITIMER_REAL, &timer, NULL);
 
 	while (game_running) {
+		switch (user_input()) {
+			case INPUT_RIGHT:
+				if (!paused)
+					tetrimino_shift(&well, SHIFT_RIGHT);
+				break;
+			case INPUT_LEFT:
+				if (!paused)
+					tetrimino_shift(&well, SHIFT_LEFT);
+				break;
+			case INPUT_DOWN:
+				if (!paused)
+					drop = 1;
+				break;
+			case INPUT_ROTATE:
+				if (!paused)
+					tetrimino_rotate(&well);
+				break;
+			case INPUT_PAUSE:
+				paused = !paused;
+				break;
+			case INPUT_STOP:
+				game_running = 0;
+		}
+
 		if (drop && !paused) {
 			if (tetrimino_shift(&well, SHIFT_DOWN) < 0) {
 				int lines = tetris_well_commit_tetrimino(&well);
@@ -54,30 +78,6 @@ int start_game(int *level, int *lines_cleared)
 			}
 
 			drop = 0;
-		}
-
-		switch (user_input()) {
-			case INPUT_RIGHT:
-				if (!paused)
-					tetrimino_shift(&well, SHIFT_RIGHT);
-				break;
-			case INPUT_LEFT:
-				if (!paused)
-					tetrimino_shift(&well, SHIFT_LEFT);
-				break;
-			case INPUT_DOWN:
-				if (!paused)
-					tetrimino_shift(&well, SHIFT_DOWN);
-				break;
-			case INPUT_ROTATE:
-				if (!paused)
-					tetrimino_rotate(&well);
-				break;
-			case INPUT_PAUSE:
-				paused = !paused;
-				break;
-			case INPUT_STOP:
-				game_running = 0;
 		}
 
 		draw_board(&well, *level, score, *lines_cleared);

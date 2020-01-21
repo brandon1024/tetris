@@ -22,7 +22,7 @@ void initialize_display_engine(void)
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
-	timeout(0);
+	halfdelay(1);
 	curs_set(0);
 
 	if (has_colors()) {
