@@ -9,6 +9,7 @@
 #define INPUT_ROTATE 4
 #define INPUT_PAUSE 5
 #define INPUT_STOP 6
+#define INPUT_DROP 7
 
 void initialize_display_engine(void);
 

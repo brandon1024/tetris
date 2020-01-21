@@ -59,6 +59,10 @@ int start_game(int *level, int *lines_cleared)
 				if (!paused)
 					tetrimino_rotate(&well);
 				break;
+			case INPUT_DROP:
+				while (!tetrimino_shift(&well, SHIFT_DOWN));
+				drop = 1;
+				break;
 			case INPUT_PAUSE:
 				paused = !paused;
 				break;

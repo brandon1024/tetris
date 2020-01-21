@@ -68,6 +68,9 @@ int user_input(void)
 		case 'q':
 		case 'Q':
 			return INPUT_STOP;
+		case '\n':
+		case KEY_ENTER:
+			return INPUT_DROP;
 	}
 
 	return 0;
