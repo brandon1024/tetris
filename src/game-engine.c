@@ -58,16 +58,20 @@ int start_game(int *level, int *lines_cleared)
 
 		switch (user_input()) {
 			case INPUT_RIGHT:
-				!paused && tetrimino_shift(&well, SHIFT_RIGHT);
+				if (!paused)
+					tetrimino_shift(&well, SHIFT_RIGHT);
 				break;
 			case INPUT_LEFT:
-				!paused && tetrimino_shift(&well, SHIFT_LEFT);
+				if (!paused)
+					tetrimino_shift(&well, SHIFT_LEFT);
 				break;
 			case INPUT_DOWN:
-				!paused && tetrimino_shift(&well, SHIFT_DOWN);
+				if (!paused)
+					tetrimino_shift(&well, SHIFT_DOWN);
 				break;
 			case INPUT_ROTATE:
-				!paused && tetrimino_rotate(&well);
+				if (!paused)
+					tetrimino_rotate(&well);
 				break;
 			case INPUT_PAUSE:
 				paused = !paused;
