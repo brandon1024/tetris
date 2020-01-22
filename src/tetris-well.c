@@ -18,6 +18,7 @@ const size_t cell_init_coords[7][4][2] = {
 };
 
 static int tetrimino_overlapping_on_board(struct tetris_well *, size_t [4][2]);
+static size_t fill_tetrimino_bag(size_t[7]);
 
 void tetris_well_init(struct tetris_well *well)
 {
@@ -30,15 +31,21 @@ void tetris_well_init(struct tetris_well *well)
 	memset(well->matrix, 0, sizeof(uint8_t) * BOARD_HEIGHT * BOARD_WIDTH);
 	memset(well->tetrimino_coords, 0, sizeof(size_t) * 4 * 2);
 	well->tetrimino_type = CELL_TYPE_NONE;
-	well->next_tetrimino_type_index = random() % 7;
+
+	memset(well->tetrimino_bag, 0, sizeof(size_t) * 7);
+	well->tetrimino_bag_index = 0;
 }
 
 int tetrinimo_new(struct tetris_well *well)
 {
-	well->tetrimino_type = (uint8_t)((unsigned)1 << well->next_tetrimino_type_index);
-	memcpy(well->tetrimino_coords, cell_init_coords[well->next_tetrimino_type_index], sizeof(size_t) * 4 * 2);
+	if (!well->tetrimino_bag_index)
+		well->tetrimino_bag_index = fill_tetrimino_bag(well->tetrimino_bag);
 
-	well->next_tetrimino_type_index = random() % 7;
+	size_t index = well->tetrimino_bag[well->tetrimino_bag_index];
+	well->tetrimino_type = (uint8_t)((unsigned)1 << index);
+	memcpy(well->tetrimino_coords, cell_init_coords[index], sizeof(size_t) * 4 * 2);
+
+	well->tetrimino_bag_index--;
 
 	return tetrimino_overlapping_on_board(well, well->tetrimino_coords);
 }
@@ -189,4 +196,22 @@ static int tetrimino_overlapping_on_board(struct tetris_well *well, size_t coord
 	}
 
 	return 0;
+}
+
+static size_t fill_tetrimino_bag(size_t bag[7])
+{
+	size_t i = 0, j = 0, tmp;
+
+	for (i = 0; i < 7; i++)
+		bag[i] = i;
+
+	// perform Fisher-Yates shuffle of bag
+	for (i = 7; i > 0; i--) {
+		j = random() % i;
+		tmp = bag[j];
+		bag[j] = bag[i - 1];
+		bag[i - 1] = tmp;
+	}
+
+	return 6;
 }

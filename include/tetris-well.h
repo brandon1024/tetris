@@ -87,7 +87,8 @@ struct tetris_well {
 	uint8_t matrix[BOARD_HEIGHT][BOARD_WIDTH];
 	size_t tetrimino_coords[4][2];
 	uint8_t tetrimino_type;
-	size_t next_tetrimino_type_index;
+	size_t tetrimino_bag_index;
+	size_t tetrimino_bag[7];
 };
 
 /**
