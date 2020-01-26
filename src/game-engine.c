@@ -10,7 +10,7 @@ static const int level_gravity_speeds[] = {
 		48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1
 };
 
-#define update_score(score, level, lines_cleared) (score_chart[lines_cleared] * (level + 1) + score)
+#define update_score(score, level, lines_cleared) (score_chart[lines_cleared > 4 ? 4 : lines_cleared] * (level + 1) + score)
 #define update_level(level, lines_cleared, total_lines_cleared) (level + ((total_lines_cleared) > ((level + 1) * 10) ? 1 : 0))
 
 static struct tetris_well well;
@@ -32,7 +32,7 @@ int start_game(int *level, int *lines_cleared)
 	*lines_cleared = 0;
 
 	tetris_well_init(&well);
-	tetrinimo_new(&well);
+	tetrimino_new(&well);
 
 	signal(SIGALRM, alarm_sig_handler);
 	timer.it_value.tv_sec = 0;
@@ -74,10 +74,10 @@ int start_game(int *level, int *lines_cleared)
 			if (tetrimino_shift(&well, SHIFT_DOWN) < 0) {
 				int lines = tetris_well_commit_tetrimino(&well);
 				*lines_cleared = *lines_cleared + lines;
-				score = update_score(score, *level, *lines_cleared);
+				score = update_score(score, *level, lines);
 				*level = update_level(*level, lines, *lines_cleared);
 
-				if (tetrinimo_new(&well))
+				if (tetrimino_new(&well))
 					game_running = 0;
 			}
 

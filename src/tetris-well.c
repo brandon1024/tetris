@@ -36,13 +36,13 @@ void tetris_well_init(struct tetris_well *well)
 	well->tetrimino_bag_index = 0;
 }
 
-int tetrinimo_new(struct tetris_well *well)
+int tetrimino_new(struct tetris_well *well)
 {
 	if (!well->tetrimino_bag_index)
 		well->tetrimino_bag_index = fill_tetrimino_bag(well->tetrimino_bag);
 
-	size_t index = well->tetrimino_bag[well->tetrimino_bag_index];
-	well->tetrimino_type = (uint8_t)((unsigned)1 << index);
+	size_t index = well->tetrimino_bag[well->tetrimino_bag_index - 1];
+	well->tetrimino_type = (uint8_t)((unsigned)1 << (index));
 	memcpy(well->tetrimino_coords, cell_init_coords[index], sizeof(size_t) * 4 * 2);
 
 	well->tetrimino_bag_index--;
@@ -213,5 +213,5 @@ static size_t fill_tetrimino_bag(size_t bag[7])
 		bag[i - 1] = tmp;
 	}
 
-	return 6;
+	return 7;
 }

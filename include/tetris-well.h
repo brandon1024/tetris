@@ -48,7 +48,7 @@
  *     int game_running = 1;
  *     int score = 0;
  *     while (game_running) {
- *         if (tetrinimo_new(&well)) {
+ *         if (tetrimino_new(&well)) {
  *             game_running = 0;
  *         } else {
  *             while (1) {
@@ -96,7 +96,7 @@ struct tetris_well {
  * is initialized with type CELL_TYPE_NONE and coordinates at the origin of the
  * well (top-left corner, [0,0]).
  *
- * To add a tetrimino to the well, see tetrinimo_new()
+ * To add a tetrimino to the well, see tetrimino_new()
  * */
 void tetris_well_init(struct tetris_well *well);
 
@@ -105,7 +105,7 @@ void tetris_well_init(struct tetris_well *well);
  * overlaps with another on the well, the game cannot continue and this function
  * returns non-zero.
  * */
-int tetrinimo_new(struct tetris_well *well);
+int tetrimino_new(struct tetris_well *well);
 
 /**
  * Shift the current tetrimino in the direction given. If the tetrimino cannot be
